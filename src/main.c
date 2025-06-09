@@ -16,8 +16,15 @@ char SEE[sizeof(BOOK)] = {
     0,
 };
 
-char prm_cmt = 0;
-char prm_space_found = 0;
+struct __prmbool {
+  unsigned m_cmt : 1;
+  unsigned m_space_found : 1;
+  unsigned m_first : 1;
+} prmbool = {0, 0, 0};
+
+#define prm_cmt prmbool.m_cmt
+#define prm_space_found prmbool.m_space_found
+#define prm_first prmbool.m_first
 
 char PARAM[SZPARAM + 2 + (CMT_REQUIRED) * 4] = {
     0,
@@ -69,15 +76,13 @@ int main() {
         if (SEE[i] != BOOK[i]) {
           if (SEE[i] == EOF) {
             SEE[i] = 0;
-            break;
           }
-          i++;
           break;
         }
       }
 
       if (i < SZBOOK) {
-        SEE[i] = 0;
+        SEE[SZBOOK] = 0;
         if (fputs(SEE, stdout) < 0)
           return 1;
 
@@ -138,15 +143,18 @@ int main() {
         return STATE_OUTFAILED;
 
       if (tprm) {
-        l = fputc(',', stdout);
-        if (l < 0)
-          return STATE_OUTFAILED;
+#if 0
+  l = fputc(',', stdout);
+  if (l < 0)
+    return STATE_OUTFAILED;
+#endif
       }
 
       dbg_puts(" \\\n \\\n\t/** param */ \\\n\t\t");
 
       prm = 0;
       prm_cmt = 1;
+      prm_first = 1;
 
       while (1) {
         if (prm_cmt) {
@@ -172,6 +180,12 @@ int main() {
             fputc(c, stdout);
             prm = 0;
             goto PRM_CASE_BLANK;
+          }
+
+          if (prm_first) {
+            prm_first = 0;
+            if (fputc(',', stdout) < 0)
+              return STATE_OUTFAILED;
           }
 
           if (prm_space_found) {
