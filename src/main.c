@@ -69,13 +69,15 @@ int main() {
         if (SEE[i] != BOOK[i]) {
           if (SEE[i] == EOF) {
             SEE[i] = 0;
+            break;
           }
+          i++;
           break;
         }
       }
 
       if (i < SZBOOK) {
-        SEE[SZBOOK] = 0;
+        SEE[i] = 0;
         if (fputs(SEE, stdout) < 0)
           return 1;
 
