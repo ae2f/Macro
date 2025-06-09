@@ -4,39 +4,51 @@ project(Macro)
 include(cmake/Core.cmake)
 
 ae2f_CoreLibTent(Macro INTERFACE inc ae2f "inc/ae2f/Macro.h")
-set(ae2f_Macro_ROOT "${PROJECT_SOURCE_DIR}/src/" CACHE STRING "${PROJECT_SOURCE_DIR}/src/")
+set(ae2f_Macro_ROOT "${PROJECT_SOURCE_DIR}/src" CACHE STRING "${PROJECT_SOURCE_DIR}/src")
 
 function(ae2f_Macro_init prm_CMT_REQUIRED prm_SZPARAM prm_SZTPARAM)
-	file(REMOVE_RECURSE ${ae2f_Macro_ROOT}/build/*)
+	file(REMOVE ${ae2f_Macro_ROOT}/build/Macro)
 
 	execute_process(
 		WORKING_DIRECTORY ${ae2f_Macro_ROOT}
-		COMMAND "cmake" "-S" "." "-B" "build" ${ARGN}
-		COMMAND "cmake" "--build" "build"
+		COMMAND ${CMAKE_COMMAND} 
+		"-S" "." "-B" "./build" 
+		-Dae2f_Macro_CMT_REQUIRED=${prm_CMT_REQUIRED}
+		-Dae2f_Macro_SZPARAM=${prm_SZPARAM}
+		-Dae2f_Macro_SZTPARAM=${prm_SZTPARAM}
+		${ARGN}
 	)
+
+	execute_process(
+		WORKING_DIRECTORY ${ae2f_Macro_ROOT}
+		COMMAND ${CMAKE_COMMAND} "--build" "build"
+		)
 endfunction()
 
 function(ae2f_Macro_one prm_in prm_out)
+	message("[ae2f_Macro_one] ${prm_in} ${prm_out}")
+	message("[ae2f_Macro_one] ROOT ${ae2f_Macro_ROOT}")
+
 	execute_process(
 		COMMAND ${ae2f_Macro_ROOT}/build/Macro 
 		INPUT_FILE ${prm_in}
 		OUTPUT_FILE ${prm_out}
-		OUTPUT_VARIABLE MacroOut
+		RESULT_VARIABLE MacroOut
 	)
 
-	if(${MacroOut} EQUAL 0)
+	if(MacroOut EQUAL 0)
 		message("[ae2f_Macro] succeed.")
 	endif()
 
-	if(${MacroOut} EQUAL 1)
+	if(MacroOut EQUAL 1)
 		message(FATAL_ERROR "[ae2f_Macro] Output operation has failed.")
 	endif()
 
-	if(${MacroOut} EQUAL 2)
+	if(MacroOut EQUAL 2)
 		message(FATAL_ERROR "[ae2f_Macro] Unexpected token.")
 	endif()
 
-	if(${MacroOut} EQUAL 3)
+	if(MacroOut EQUAL 3)
 		message(FATAL_ERROR "[ae2f_Macro] Buffer overrun has occurred.")
 	endif()
 endfunction()

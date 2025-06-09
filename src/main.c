@@ -66,14 +66,16 @@ int main() {
       size_t i = 1;
       for (; i < SZBOOK; i++) {
         SEE[i] = fgetc(stdin);
-        if (SEE[i] != BOOK[i])
+        if (SEE[i] != BOOK[i]) {
           if (SEE[i] == EOF) {
             SEE[i] = 0;
-            break;
           }
+          break;
+        }
       }
 
       if (i < SZBOOK) {
+        SEE[SZBOOK] = 0;
         if (fputs(SEE, stdout) < 0)
           return 1;
 
