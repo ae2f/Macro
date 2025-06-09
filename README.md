@@ -69,4 +69,4 @@ output.c
 > Calls ae2f_Macro_one.
 
 - prm_in    [File Path]
-    > Its output file will be something like `/path/name.ext1.ext2.auto.extlast`
+    > Its output file will be something like `/path/name.ext1.ext2.extlast` -> `/path/name.auto.extlast`
