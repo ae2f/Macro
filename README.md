@@ -1,6 +1,10 @@
 # ae2f::Macro
 > Template programming utility in C/CMake.  
 
+# Requirements
+- cmake >= 3.20
+- gcc
+
 # ae2f_MAC 
 > defined in ae2f/Macro.h
 
