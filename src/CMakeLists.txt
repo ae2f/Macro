@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.30)
+project(Macro_BIN)
 
 add_executable(Macro main.c)
 
