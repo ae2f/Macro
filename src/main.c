@@ -59,7 +59,7 @@ int stack = 0;
 #define isAlph(c)                                                              \
   ((((c) >= 'A') && ((c) <= 'Z')) || (((c) >= 'a') && ((c) <= 'z')))
 #define isNumber(c) (((c) >= '0') && ((c) <= '9'))
-#define isVarName(c) (isAlph(c) || isNumber(c))
+#define isVarName(c) ((isAlph(c) || isNumber(c)) || (c) == '_')
 
 int main() {
 
