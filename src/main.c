@@ -1,0 +1,268 @@
+#include <stdio.h>
+
+#define BOOK "ae2f_MAC("
+
+#if CMT_REQUIRED
+#define dbg_printf(s, ...) fprintf(stdout, s, __VA_ARGS__)
+#define dbg_puts(s) fputs(s, stdout)
+#else
+#define dbg_printf(s, ...)
+#define dbg_puts(s)
+#endif
+
+#define SZBOOK (sizeof(BOOK) - 1)
+
+char SEE[sizeof(BOOK)] = {
+    0,
+};
+
+char prm_cmt = 0;
+char prm_space_found = 0;
+
+char PARAM[SZPARAM + 2 + (CMT_REQUIRED) * 4] = {
+    0,
+};
+char TPARAMS[SZTPARAM + 1] = {
+    0,
+};
+
+char ENDL[] = " \\\n";
+char prmtype = 0;
+
+int c;
+int l;
+int tprm = 0;
+int prm = 0;
+int stack = 0;
+
+#define STATE_OK 0
+#define STATE_OUTFAILED 1
+#define STATE_UNEXPECTED 2
+#define STATE_OVERRUN 3
+
+#define casenewlines                                                           \
+  case '\n':                                                                   \
+  case '\r'
+
+#define caseblanks                                                             \
+  case ' ':                                                                    \
+  case '\t':                                                                   \
+    casenewlines
+
+#define isAlph(c)                                                              \
+  ((((c) >= 'A') && ((c) <= 'Z')) || (((c) >= 'a') && ((c) <= 'z')))
+#define isNumber(c) (((c) >= '0') && ((c) <= '9'))
+#define isVarName(c) (isAlph(c) || isNumber(c))
+
+int main() {
+
+  while ((c = fgetc(stdin)) != EOF) {
+    if (c != 'a') {
+      l = fputc(c, stdout);
+      if (l < 0)
+        return 1;
+    } else {
+      SEE[0] = 'a';
+      size_t i = 1;
+      for (; i < SZBOOK; i++) {
+        SEE[i] = fgetc(stdin);
+        if (SEE[i] != BOOK[i])
+          if (SEE[i] == EOF) {
+            SEE[i] = 0;
+            break;
+          }
+      }
+
+      if (i < SZBOOK) {
+        if (fputs(SEE, stdout) < 0)
+          return 1;
+
+        continue;
+      }
+
+      l = fputs("#define _", stdout);
+
+      if (l < 0)
+        return STATE_OUTFAILED;
+
+      tprm = 0;
+      prm = 0;
+      stack = 0; /** init */
+      prmtype = 1;
+
+      while (1) {
+        switch ((c = fgetc(stdin))) {
+        case EOF:
+          return 2;
+
+        case ')':
+          goto TPARAMED;
+
+        default: {
+          TPARAMS[tprm] = c;
+          if (tprm == SZTPARAM)
+            return STATE_OVERRUN;
+          tprm++;
+        }
+
+        caseblanks:
+          break;
+        }
+      } /** tparam */
+
+    TPARAMED:
+
+      while (1) {
+        switch (c = fgetc(stdin)) {
+        case EOF:
+          return 1;
+        default:
+          l = fputc(c, stdout);
+          if (l < 0)
+            return STATE_OUTFAILED;
+          if (c == '(')
+            goto FNED;
+        caseblanks:
+          break;
+        }
+      } /** fn */
+
+    FNED:
+      dbg_puts(" \\\n\t/** tparam */ \\\n\t\t");
+      TPARAMS[tprm] = 0;
+      if (fputs(TPARAMS, stdout) < 0)
+        return STATE_OUTFAILED;
+
+      if (tprm) {
+        l = fputc(',', stdout);
+        if (l < 0)
+          return STATE_OUTFAILED;
+      }
+
+      dbg_puts(" \\\n \\\n\t/** param */ \\\n\t\t");
+
+      prm = 0;
+      prm_cmt = 1;
+
+      while (1) {
+        if (prm_cmt) {
+          if (fputs("/* ", stdout) < 0)
+            return STATE_OUTFAILED;
+          prm_cmt = 0;
+        }
+
+        switch (c = fgetc(stdin)) {
+        case EOF:
+          return 1;
+
+        caseblanks:
+          fputc(' ', stdout);
+        PRM_CASE_BLANK:
+          prm_space_found = 1;
+          break;
+
+        default:
+          if (!isVarName(c)) {
+            PARAM[prm] = 0;
+            fputs(PARAM, stdout);
+            fputc(c, stdout);
+            prm = 0;
+            goto PRM_CASE_BLANK;
+          }
+
+          if (prm_space_found) {
+            PARAM[prm] = 0;
+            fputs(PARAM, stdout);
+            prm = 0;
+            prm_space_found = 0;
+          }
+
+          PARAM[prm] = c;
+          if (prm == SZPARAM)
+            return STATE_OVERRUN;
+          prm++;
+          break;
+
+        case ',':
+        case ')':
+          PARAM[prm] = c;
+          PARAM[prm + 1] = 0;
+
+          if (fputs(" */ ", stdout) < 0)
+            return STATE_OUTFAILED;
+
+          prm_cmt = 1;
+
+#if CMT_REQUIRED
+          if (c == ')') {
+            PARAM[prm] = ' ';
+            PARAM[prm + 1] = '\\';
+            PARAM[prm + 2] = '\n';
+            PARAM[prm + 3] = c;
+            PARAM[prm + 4] = 0;
+            l = fputs(PARAM, stdout);
+          } else
+#endif
+            l = fputs(PARAM, stdout);
+
+          if (l < 0)
+            return STATE_OUTFAILED;
+
+          prm = 0;
+
+          if (',' == c) {
+            dbg_puts(" \\\n\t\t");
+            goto PRM_CASE_BLANK;
+          } else {
+            goto PRMED;
+          }
+        }
+      }
+    PRMED:
+
+      while (1) {
+        switch (c = fgetc(stdin)) {
+        case EOF:
+          return 1;
+
+        casenewlines:
+          ENDL[2] = c;
+          l = fputs(ENDL, stdout);
+          if (l < 0)
+            return STATE_OUTFAILED;
+
+          break;
+
+        default:
+          l = fputc(c, stdout);
+          if (l < 0)
+            return STATE_OUTFAILED;
+          break;
+
+        case '{':
+          if (!(++stack)) {
+            return STATE_OVERRUN;
+          }
+          l = fputc('{', stdout);
+          if (l < 0)
+            return STATE_OUTFAILED;
+          break;
+
+        case '}':
+          l = fputc('}', stdout);
+          if (l < 0)
+            return STATE_OUTFAILED;
+
+          if (!(--stack)) {
+            goto STACKED;
+          }
+          break;
+        }
+      }
+      /* stack */
+    STACKED:;
+    }
+  }
+
+  return 0;
+}
