@@ -8,11 +8,12 @@ set(ae2f_Macro_ROOT "${PROJECT_SOURCE_DIR}/src" CACHE STRING "${PROJECT_SOURCE_D
 
 function(ae2f_Macro_init prm_CMT_REQUIRED prm_SZPARAM prm_SZTPARAM)
 	file(REMOVE ${ae2f_Macro_ROOT}/build/Macro)
+  message("[ae2f_Macro_init]  ${CMAKE_GENERATOR}")
 
 	execute_process(
 		WORKING_DIRECTORY ${ae2f_Macro_ROOT}
 		COMMAND ${CMAKE_COMMAND} 
-		"-S" "." "-B" "./build" 
+    "-S" "." "-B" "./build" "-G" "${CMAKE_GENERATOR}" 
 		-Dae2f_Macro_CMT_REQUIRED=${prm_CMT_REQUIRED}
 		-Dae2f_Macro_SZPARAM=${prm_SZPARAM}
 		-Dae2f_Macro_SZTPARAM=${prm_SZTPARAM}
