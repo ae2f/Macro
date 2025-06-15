@@ -8,7 +8,7 @@ set(ae2f_Macro_ROOT "${PROJECT_SOURCE_DIR}/src" CACHE STRING "${PROJECT_SOURCE_D
 
 function(ae2f_Macro_init prm_CMT_REQUIRED prm_SZPARAM prm_SZTPARAM)
 	file(REMOVE ${ae2f_Macro_ROOT}/build/Macro)
-  message("[ae2f_Macro_init]  ${CMAKE_GENERATOR}")
+  	message("[ae2f_Macro_init]  ${CMAKE_GENERATOR}")
 
 	execute_process(
 		WORKING_DIRECTORY ${ae2f_Macro_ROOT}
@@ -18,12 +18,24 @@ function(ae2f_Macro_init prm_CMT_REQUIRED prm_SZPARAM prm_SZTPARAM)
 		-Dae2f_Macro_SZPARAM=${prm_SZPARAM}
 		-Dae2f_Macro_SZTPARAM=${prm_SZTPARAM}
 		${ARGN}
+  		RESULT_VARIABLE ConfOut
 	)
+
+ 	if(NOT ConfOut EQUAL 0)
+		message(FATAL_ERROR "[ae2f_Macro_init] Configuration failed. ${ConfOut}")
+	endif()
 
 	execute_process(
 		WORKING_DIRECTORY ${ae2f_Macro_ROOT}
 		COMMAND ${CMAKE_COMMAND} "--build" "build"
+  		RESULT_VARIABLE BuildOut
 		)
+  
+ 	if(NOT BuildOut EQUAL 0)
+		message(FATAL_ERROR "[ae2f_Macro_init] Build failed. ${BuildOut}")
+	endif()
+
+ 	message("[ae2f_Macro_init] Succeed.")
 endfunction()
 
 function(ae2f_Macro_one prm_in prm_out)
