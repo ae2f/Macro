@@ -3,7 +3,10 @@ cmake_minimum_required(VERSION 3.20)
 project(Macro)
 include(cmake/Core.cmake)
 
-ae2f_CoreLibTent(Macro INTERFACE inc ae2f "inc/ae2f/Macro.h")
+if(NOT TARGET ae2f::Macro)
+	ae2f_CoreLibTent(Macro INTERFACE inc ae2f "inc/ae2f/Macro.h")
+endif()
+
 set(ae2f_Macro_ROOT "${PROJECT_SOURCE_DIR}/src" CACHE STRING "${PROJECT_SOURCE_DIR}/src")
 
 function(ae2f_Macro_init prm_CMT_REQUIRED prm_SZPARAM prm_SZTPARAM)
