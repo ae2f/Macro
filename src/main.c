@@ -59,7 +59,7 @@ int stack = 0;
 #define isAlph(c)                                                              \
   ((((c) >= 'A') && ((c) <= 'Z')) || (((c) >= 'a') && ((c) <= 'z')))
 #define isNumber(c) (((c) >= '0') && ((c) <= '9'))
-#define isVarName(c) (isAlph(c) || isNumber(c))
+#define isVarName(c) ((isAlph(c) || isNumber(c)) || (c) == '_')
 
 int main() {
 
@@ -74,10 +74,13 @@ int main() {
       size_t i = 1;
       for (; i < SZBOOK; i++) {
         SEE[i] = fgetc(stdin);
+
         if (SEE[i] != BOOK[i]) {
-          if (SEE[i] == EOF) {
-            SEE[i] = 0;
+          if (SEE[i] != EOF) {
+            i++;
           }
+
+          SEE[i] = 0;
           break;
         }
       }
