@@ -1,4 +1,4 @@
-set(ae2f_MAC_KEYWORD "\"ae2f_MAC\"")
+set(ae2f_MAC_KEYWORD "ae2f_MAC")
 
 function(ae2f_Macro_init prm_CMT_REQUIRED prm_SZPARAM prm_SZTPARAM)
 	file(REMOVE ${ae2f_Macro_ROOT}/build/Macro)
