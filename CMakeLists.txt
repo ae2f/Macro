@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.20)
 
-project(Macro)
+project(Macro VERSION 1.0.0)
 
 set(ae2f_Macro_ROOT "${PROJECT_SOURCE_DIR}/src-macro" CACHE STRING "${PROJECT_SOURCE_DIR}/src-macro")
 

@@ -1,9 +1,11 @@
 # ae2f::Macro
+> Rel-v1.0.0
+
 > Template programming utility in C/CMake.  
 
 # Requirements
 - cmake >= 3.20
-- gcc
+- C     >= 90
 
 # ae2f_MAC 
 > defined in ae2f/Macro.h
