@@ -1,6 +1,7 @@
 #include <stdio.h>
+#include "./main.auto.h"
 
-#define BOOK "ae2f_MAC("
+#define BOOK ae2f_MAC_KEYWORD "("
 
 #if CMT_REQUIRED
 #define dbg_printf(s, ...) fprintf(stdout, s, __VA_ARGS__)
@@ -63,7 +64,7 @@ int stack = 0;
 
 int main() {
 
-  puts("#define __ae2f_MACRO_GENERATED 1");
+  puts("#define __ae2f_MACRO_GENERATED");
   while ((c = fgetc(stdin)) != EOF) {
     if (c != 'a') {
       l = fputc(c, stdout);
