@@ -6,7 +6,7 @@
 makers=("-GNinja" "")
 # buildtypes=("Release" "Debug" "MinSizeRel" "RelWithDebInfo")
 lstdc=("90" "99" "11" "17" "23")
-lstdcc=("")
+lstdcc=("23")
 
 __ae2f_CXX=("OFF")
 __ae2f_IS_SHARED=("ON" "OFF")
@@ -20,6 +20,7 @@ for stdcc in ${lstdcc[@]}; do
                     for _ae2f_IS_SHARED in ${__ae2f_IS_SHARED[@]}; do
                         cmake -S . -B build \
                             -DCMAKE_C_STANDARD=$stdc \
+                            -DCMAKE_CXX_STANDARD=$stdcc \
                             $maker $1 $2 \
                             -Dae2f_CXX=$_ae2f_CXX \
                             -Dae2f_IS_SHARED=$_ae2f_IS_SHARED || { echo "Configuration failed"; exit 1; }
