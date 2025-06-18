@@ -6,7 +6,7 @@
 makers=("-GNinja" "")
 # buildtypes=("Release" "Debug" "MinSizeRel" "RelWithDebInfo")
 lstdc=("90" "99" "11" "17" "23")
-lstdc=("")
+lstdcc=("")
 
 __ae2f_CXX=("OFF")
 __ae2f_IS_SHARED=("ON" "OFF")
