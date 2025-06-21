@@ -56,7 +56,7 @@ function(ae2f_Macro_one prm_in prm_out)
 	message("[ae2f_Macro_one] ${prm_in} ${prm_out}")
 	message("[ae2f_Macro_one] ROOT ${ae2f_Macro_ROOT}")	
 
-	file(GLOB macrocmd ${ae2f_Macro_ROOT}/build/bin/**/M*)
+	file(GLOB macrocmd ${ae2f_Macro_ROOT}/build/bin/**)
 
 	execute_process(
 		COMMAND ${macrocmd}
