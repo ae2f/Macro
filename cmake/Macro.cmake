@@ -1,7 +1,7 @@
 set(ae2f_MAC_KEYWORD "ae2f_MAC")
 
 function(ae2f_Macro_init prm_CMT_REQUIRED prm_SZPARAM prm_SZTPARAM)
-	file(REMOVE_RECURSE ${ae2f_Macro_ROOT}/build)
+	file(REMOVE_RECURSE ${ae2f_Macro_ROOT}/build/bin)
   	message("[ae2f_Macro_init]  ${CMAKE_GENERATOR}")
 
 	if(${CMAKE_C_STANDARD})
@@ -56,7 +56,7 @@ function(ae2f_Macro_one prm_in prm_out)
 	message("[ae2f_Macro_one] ${prm_in} ${prm_out}")
 	message("[ae2f_Macro_one] ROOT ${ae2f_Macro_ROOT}")	
 
-	file(GLOB macrocmd ${ae2f_Macro_ROOT}/build/bin/**)
+	file(GLOB_RECURSE macrocmd ${ae2f_Macro_ROOT}/build/bin/**)
 
 	execute_process(
 		COMMAND ${macrocmd}
