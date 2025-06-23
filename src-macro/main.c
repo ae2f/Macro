@@ -1,5 +1,5 @@
-#include <stdio.h>
 #include "./main.auto.h"
+#include <stdio.h>
 
 #define BOOK ae2f_MAC_KEYWORD "("
 
@@ -287,8 +287,7 @@ int main() {
     }
   }
 
-  puts("#undef __ae2f_MACRO_GENERATED\n"
-       "#define __ae2f_MACRO_GENERATED 0");
+  puts("\n\n#undef __ae2f_MACRO_GENERATED");
 
   return 0;
 }
