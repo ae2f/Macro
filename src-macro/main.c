@@ -1,7 +1,7 @@
 #include "./main.auto.h"
 #include <stdio.h>
 
-#define BOOK ae2f_MAC_KEYWORD "("
+#define BOOK (ae2f_MAC_KEYWORD "(")
 
 #if CMT_REQUIRED
 #define dbg_printf(s, ...) fprintf(stdout, s, __VA_ARGS__)
@@ -11,7 +11,7 @@
 #define dbg_puts(s)
 #endif
 
-#define SZBOOK (sizeof(BOOK) - 1)
+#define SZBOOK (sizeof(BOOK))
 
 char SEE[sizeof(BOOK)] = {
     0,
@@ -66,17 +66,17 @@ int main() {
 
   puts("#define __ae2f_MACRO_GENERATED\n\n");
   while ((c = fgetc(stdin)) != EOF) {
-    if (c != 'a') {
+    if (c != (BOOK)[0]) {
       l = fputc(c, stdout);
       if (l < 0)
         return 1;
     } else {
-      SEE[0] = 'a';
+      SEE[0] = (BOOK)[0];
       size_t i = 1;
       for (; i < SZBOOK; i++) {
         SEE[i] = fgetc(stdin);
 
-        if (SEE[i] != BOOK[i]) {
+        if (SEE[i] != (BOOK)[i]) {
           SEE[i + 1] = 0;
           break;
         }
