@@ -64,7 +64,7 @@ int stack = 0;
 
 int main() {
 
-  puts("#define __ae2f_MACRO_GENERATED");
+  puts("#define __ae2f_MACRO_GENERATED\n\n");
   while ((c = fgetc(stdin)) != EOF) {
     if (c != 'a') {
       l = fputc(c, stdout);
@@ -77,11 +77,7 @@ int main() {
         SEE[i] = fgetc(stdin);
 
         if (SEE[i] != BOOK[i]) {
-          if (SEE[i] != EOF) {
-            i++;
-          }
-
-          SEE[i] = 0;
+          SEE[i + 1] = 0;
           break;
         }
       }
