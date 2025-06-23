@@ -11,7 +11,7 @@
 #define dbg_puts(s)
 #endif
 
-#define SZBOOK (sizeof(BOOK))
+#define SZBOOK (sizeof(BOOK) - 1)
 
 char SEE[sizeof(BOOK)] = {
     0,
