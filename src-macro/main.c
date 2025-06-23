@@ -61,16 +61,50 @@ int stack = 0;
   ((((c) >= 'A') && ((c) <= 'Z')) || (((c) >= 'a') && ((c) <= 'z')))
 #define isNumber(c) (((c) >= '0') && ((c) <= '9'))
 #define isVarName(c) ((isAlph(c) || isNumber(c)) || (c) == '_')
+#define isNewLine(c) ((c) == '\n' || (c) == '\r')
 
 int main() {
 
-  puts("#define __ae2f_MACRO_GENERATED\n\n");
+  puts("#undef\t__ae2f_MACRO_GENERATED\n"
+       "#define\t__ae2f_MACRO_GENERATED\t1");
   while ((c = fgetc(stdin)) != EOF) {
+
+    goto __START;
+  __REST:
     if (c != (BOOK)[0]) {
       l = fputc(c, stdout);
       if (l < 0)
         return 1;
-    } else {
+    }
+    continue;
+
+  __START:
+    if (c == '#') {
+      const char _INCLUDE[sizeof("#include") - 1] = "#include";
+      char _SEE_INC[sizeof(_INCLUDE)];
+      size_t i = 1;
+      _SEE_INC[0] = '#';
+      fputc('#', stdout);
+      for (; i < sizeof(_INCLUDE); i++) {
+        _SEE_INC[i] = fgetc(stdin);
+        fputc(_SEE_INC[i], stdout);
+
+        if (_SEE_INC[i] != _INCLUDE[i]) {
+          break;
+        }
+      }
+
+      if (i == sizeof(_INCLUDE)) {
+        while ((c = fgetc(stdin)) != EOF && !isNewLine(c)) {
+          fputc(c, stdout);
+        }
+
+        puts("\n#undef __ae2f_MACRO_GENERATED\n"
+             "#define __ae2f_MACRO_GENERATED 1");
+      }
+    }
+
+    else if (c == (BOOK)[0]) {
       SEE[0] = (BOOK)[0];
       size_t i = 1;
       for (; i < SZBOOK; i++) {
@@ -280,9 +314,14 @@ int main() {
       /* stack */
     STACKED:;
     }
+
+    else {
+      goto __REST;
+    }
   }
 
-  puts("\n\n#undef __ae2f_MACRO_GENERATED");
+  puts("\n#undef\t__ae2f_MACRO_GENERATED\n"
+       "\n#define\t__ae2f_MACRO_GENERATED\t0\n");
 
   return 0;
 }
