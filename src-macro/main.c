@@ -83,7 +83,6 @@ int main() {
       }
 
       if (i < SZBOOK) {
-        SEE[i] = 0;
         if (fputs(SEE, stdout) < 0)
           return 1;
 
