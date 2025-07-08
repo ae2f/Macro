@@ -4,6 +4,22 @@
 
 #if !__ae2f_MACRO_GENERATED
 
+/** Available when is macro-generated */
+#define ae2f_WhenMac(...)
+
+/** Available when is not-macro-generated. */
+#define ae2f_WhenNMac(...) __VA_ARGS__
+
+#else
+
+/** Available when is macro-generated .*/
+#define ae2f_WhenMac(...) __VA_ARGS__
+
+/** Available when is not-macro-generated. */
+#define ae2f_WhenNMac(...)
+
+#endif
+
 /**
  * @def ae2f_MAC
  * @brief
@@ -12,6 +28,4 @@
  * @details
  * Its parameters will be additional template parameters you could customise.
  * */
-#define ae2f_MAC(...) inline static void
-
-#endif
+#define ae2f_MAC(...) ae2f_WhenNMac(inline static void)
