@@ -72,3 +72,9 @@ output.c
 
 - prm_in    [File Path]
     > Its output file will be something like `/path/name.ext1.ext2.extlast` -> `/path/name.auto.extlast`
+
+# Caution
+- Sinle-line comment `//` is not allowed.
+- Macro cannot return a value.
+- You cannot use `return` keyword.
+- Every parameter may be L-value. Use with caution.
