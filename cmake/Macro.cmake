@@ -98,7 +98,11 @@ function(ae2f_Macro_cvrtdir prm_in_dir prm_in_glob prm_out_dir prm_out_ext)
 	endforeach()
 endfunction()
 
-function(ae2f_Macro_Lib prm_namespace prm_name prm_prefix prm_in_dir prm_in_glob prm_out_dir prm_out_ext prm_config_file prm_include_dir)
+function(ae2f_Macro_Lib prm_namespace prm_name prm_prefix 
+		prm_in_dir prm_in_glob 
+		prm_out_dir prm_out_ext 
+		prm_config_file prm_include_dir
+	)
 	file(GLOB_RECURSE files "${prm_in_dir}/${prm_in_glob}")
 	foreach(file ${files})
 		ae2f_Macro_cvrt(${file} ${prm_out_dir} ${prm_out_ext})
@@ -108,12 +112,14 @@ function(ae2f_Macro_Lib prm_namespace prm_name prm_prefix prm_in_dir prm_in_glob
 		ae2f_CoreLibTentConfigCustom(
 			${prm_name} ${prm_prefix} ${prm_include_dir} 
 			${prm_namespace} ${prm_config_file} ${files}
+			${ARGN}
 		)
 	else()
 		file(GLOB_RECURSE ofiles "${prm_out_dir}/*${prm_out_ext}")
 		ae2f_CoreLibTentConfigCustom(
 			${prm_name} INTERFACE ${prm_include_dir} 
 			${prm_namespace} ${prm_config_file} ${ofiles}
+			${ARGN}
 		)
 	endif()
 endfunction()
