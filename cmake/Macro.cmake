@@ -98,30 +98,58 @@ function(ae2f_Macro_cvrtdir prm_in_dir prm_in_glob prm_out_dir prm_out_ext)
 	endforeach()
 endfunction()
 
+function(ae2f_Macro_Lib_V prm_namespace prm_name prm_prefix
+		prm_src_dir	prm_src_glob 
+		prm_src_out_dir	prm_src_out_ext
+
+		prm_inc_dir	prm_inc_glob
+		prm_inc_out_dir	prm_inc_out_ext
+
+		prm_config_file	prm_include_dir
+)
+
+	file(GLOB_RECURSE files-inc "${prm_inc_dir}/${prm_inc_glob}")
+	file(GLOB_RECURSE files-src "${prm_src_dir}/${prm_src_glob}")
+
+	foreach(file ${files-inc})
+		ae2f_Macro_cvrt(${file} ${prm_inc_out_dir} ${prm_inc_out_ext})
+	endforeach()
+
+	foreach(file ${files-src})
+		ae2f_Macro_cvrt(${file} ${prm_src_out_dir} ${prm_src_out_ext})
+	endforeach()
+
+
+	if(ae2f_MAC_BUILD)
+		ae2f_CoreLibTentConfigCustom(
+			${prm_name} ${prm_prefix} ${prm_include_dir} 
+			${prm_namespace} ${prm_config_file} ${files-src}
+			${ARGN}
+		)
+	else()
+		file(GLOB_RECURSE ofiles-src "${prm_src_out_dir}/*${prm_src_out_ext}")
+		file(GLOB_RECURSE ofiles-inc "${prm_inc_out_dir}/*${prm_inc_out_ext}")
+
+		ae2f_CoreLibTentConfigCustom(
+			${prm_name} INTERFACE ${prm_include_dir} 
+			${prm_namespace} ${prm_config_file} 
+			${ofiles-src} ${ofiles-inc}
+			${ARGN}
+		)
+	endif()
+endfunction()
+
 function(ae2f_Macro_Lib prm_namespace prm_name prm_prefix 
 		prm_in_dir prm_in_glob 
 		prm_out_dir prm_out_ext 
 		prm_config_file prm_include_dir
 	)
-	file(GLOB_RECURSE files "${prm_in_dir}/${prm_in_glob}")
-	foreach(file ${files})
-		ae2f_Macro_cvrt(${file} ${prm_out_dir} ${prm_out_ext})
-	endforeach()
-
-	if(ae2f_MAC_BUILD)
-		ae2f_CoreLibTentConfigCustom(
-			${prm_name} ${prm_prefix} ${prm_include_dir} 
-			${prm_namespace} ${prm_config_file} ${files}
-			${ARGN}
-		)
-	else()
-		file(GLOB_RECURSE ofiles "${prm_out_dir}/*${prm_out_ext}")
-		ae2f_CoreLibTentConfigCustom(
-			${prm_name} INTERFACE ${prm_include_dir} 
-			${prm_namespace} ${prm_config_file} ${ofiles}
-			${ARGN}
-		)
-	endif()
+	ae2f_Macro_Lib_V(
+		${prm_namespace} ${prm_name} ${prm_prefix} 
+		${prm_in_dir} ${prm_in_glob} ${prm_out_dir} ${prm_out_ext}
+		${prm_in_dir} ${prm_in_glob} ${prm_out_dir} ${prm_out_ext}
+		${prm_config_file} ${prm_include_dir}
+	)
 endfunction()
 
 function(ae2f_Macro_autoname prm_in)
