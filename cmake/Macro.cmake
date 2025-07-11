@@ -1,4 +1,7 @@
 set(ae2f_MAC_KEYWORD "ae2f_MAC")
+option(ae2f_MAC_BUILD "Convention variable. If on, macro function will be built." OFF)
+
+include(${PROJECT_SOURCE_DIR}/cmake/Core.cmake)
 
 function(ae2f_Macro_init prm_CMT_REQUIRED prm_SZPARAM prm_SZTPARAM)
 	file(REMOVE_RECURSE ${ae2f_Macro_ROOT}/build/bin)
@@ -86,6 +89,33 @@ endfunction()
 function(ae2f_Macro_cvrt prm_in prm_dir prm_ext)
 	get_filename_component(path_no_ext "${prm_in}" NAME_WE)
 	ae2f_Macro_one(${prm_in} ${prm_dir}/${path_no_ext}${prm_ext})
+endfunction()
+
+function(ae2f_Macro_cvrtdir prm_in_dir prm_in_glob prm_out_dir prm_out_ext)
+	file(GLOB_RECURSE files "${prm_in_dir}/${prm_in_glob}")
+	foreach(file ${files})
+		ae2f_Macro_cvrt(${file} ${prm_out_dir} ${prm_out_ext})
+	endforeach()
+endfunction()
+
+function(ae2f_Macro_Lib prm_namespace prm_name prm_prefix prm_in_dir prm_in_glob prm_out_dir prm_out_ext prm_config_file prm_include_dir)
+	file(GLOB_RECURSE files "${prm_in_dir}/${prm_in_glob}")
+	foreach(file ${files})
+		ae2f_Macro_cvrt(${file} ${prm_out_dir} ${prm_out_ext})
+	endforeach()
+
+	if(ae2f_MAC_BUILD)
+		ae2f_CoreLibTentConfigCustom(
+			${prm_name} ${prm_prefix} ${prm_include_dir} 
+			${prm_namespace} ${prm_config_file} ${files}
+		)
+	else()
+		file(GLOB_RECURSE ofiles "${prm_out_dir}/*${prm_out_ext}")
+		ae2f_CoreLibTentConfigCustom(
+			${prm_name} INTERFACE ${prm_include_dir} 
+			${prm_namespace} ${prm_config_file} ${ofiles}
+		)
+	endif()
 endfunction()
 
 function(ae2f_Macro_autoname prm_in)
