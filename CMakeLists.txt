@@ -8,5 +8,6 @@ include(cmake/Core.cmake)
 include(cmake/Macro.cmake)
 
 if(NOT TARGET ae2f::Macro)
+	configure_file(${PROJECT_SOURCE_DIR}/Macro.h.in ${PROJECT_SOURCE_DIR}/inc/ae2f/Macro.h)
 	ae2f_CoreLibTent(Macro INTERFACE inc ae2f "inc/ae2f/Macro.h")
 endif()

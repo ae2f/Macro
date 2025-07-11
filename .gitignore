@@ -4,3 +4,4 @@ build/*
 .*/
 
 *.auto.h
+inc/ae2f/Macro.h
