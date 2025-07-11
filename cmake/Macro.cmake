@@ -117,7 +117,7 @@ function(ae2f_Macro_Lib_V prm_namespace prm_name prm_prefix
 		ae2f_CoreLibTentConfigCustom(
 			${prm_name} ${prm_prefix} ${prm_include_dir} 
 			${prm_namespace} ${prm_config_file}
-			${ARGN}
+			${ARGN} ${files-src}
 		)
 	else()
 		file(GLOB_RECURSE ofiles-inc "${prm_inc_out_dir}/*${prm_inc_out_ext}")
@@ -125,7 +125,7 @@ function(ae2f_Macro_Lib_V prm_namespace prm_name prm_prefix
 		ae2f_CoreLibTentConfigCustom(
 			${prm_name} INTERFACE ${prm_include_dir} 
 			${prm_namespace} ${prm_config_file} 
-			${ofiles-inc}
+			${ofiles-inc} ${}
 			${ARGN}
 		)
 	endif()
