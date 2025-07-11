@@ -82,6 +82,12 @@ function(ae2f_Macro_one prm_in prm_out)
 	endif()
 endfunction()
 
+
+function(ae2f_Macro_cvrt prm_in prm_dir prm_ext)
+	get_filename_component(path_no_ext "${prm_in}" NAME_WE)
+	ae2f_Macro_one(${prm_in} ${prm_dir}/${path_no_ext}${prm_ext})
+endfunction()
+
 function(ae2f_Macro_autoname prm_in)
 	get_filename_component(path_no_ext "${prm_in}" NAME_WE)
 	get_filename_component(ext "${prm_in}" LAST_EXT)
