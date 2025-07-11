@@ -2,13 +2,17 @@
 #define __ae2f_MACRO_GENERATED 0
 #endif
 
+#undef	ae2f_WhenMac
+#undef	ae2f_WhenNMac
+#undef	ae2f_MAC
+
 #if !__ae2f_MACRO_GENERATED
 
 /** Available when is macro-generated */
-#define ae2f_WhenMac(...)
+#define	ae2f_WhenMac(...)
 
 /** Available when is not-macro-generated. */
-#define ae2f_WhenNMac(...) __VA_ARGS__
+#define	ae2f_WhenNMac(...) __VA_ARGS__
 
 #else
 
