@@ -125,7 +125,7 @@ function(ae2f_Macro_Lib_V prm_namespace prm_name prm_prefix
 		ae2f_CoreLibTentConfigCustom(
 			${prm_name} INTERFACE ${prm_include_dir} 
 			${prm_namespace} ${prm_config_file} 
-			${ofiles-inc} ${}
+			${ofiles-inc}
 			${ARGN}
 		)
 	endif()
