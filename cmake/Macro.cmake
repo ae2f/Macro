@@ -113,15 +113,15 @@ function(ae2f_Macro_Lib_V prm_namespace prm_name prm_prefix
 		ae2f_Macro_cvrt(${file} ${prm_inc_out_dir} ${prm_inc_out_ext})
 	endforeach()
 
+	file(GLOB_RECURSE ofiles-inc "${prm_inc_out_dir}/*${prm_inc_out_ext}")
+
 	if(ae2f_MAC_BUILD)
 		ae2f_CoreLibTentConfigCustom(
 			${prm_name} ${prm_prefix} ${prm_include_dir} 
 			${prm_namespace} ${prm_config_file}
-			${ARGN} ${files-src}
+			${ARGN} ${files-src} ${ofiles-inc}
 		)
 	else()
-		file(GLOB_RECURSE ofiles-inc "${prm_inc_out_dir}/*${prm_inc_out_ext}")
-
 		ae2f_CoreLibTentConfigCustom(
 			${prm_name} INTERFACE ${prm_include_dir} 
 			${prm_namespace} ${prm_config_file} 
